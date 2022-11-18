@@ -4,26 +4,27 @@ on:
   schedule: 
     # 代表国际标准时间23点0分，北京时间需要+8小时，代表北京时间上午7点运行
     - cron: '0 23 * * *'
-    jobs:
-  work:
-    runs-on: ubuntu-latest
+jobs:
+#将工作流程中运行的所有作业组合在一起
+  build:
+  #定义名为 build 的作业。 子键将定义作业的属性 
+    runs-on: ubuntu-latest 
     steps:
-      - uses: actions/checkout@v3
-      - uses: szenius/set-timezone@v1.0 # 设置执行环境的时区
+      - uses: actions/checkout@v2
+    
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          timezoneLinux: "Asia/Shanghai"
-      - uses: actions/setup-python@v4 # 使用python装配器
-        with:
-          python-version: '3.10' # 指定python版本
-          cache: 'poetry' # 设置缓存
-
-      - run: poetry install --without dev # 安装
-      - run: poetry run python .\bin.py # 执行
-      
+          python-version: 3.9.1
+      - name: Set timezone
+        run: |
           cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
       - name: install pip packages
         run: |
           python -m pip install --upgrade pip
+          pip install requests
+          pip install zhdate
+          pip freeze > requirements.txt
           pip3 install -r requirements.txt
       - name: weixin
         run: |
