@@ -4,12 +4,11 @@ on:
   schedule: 
     # 代表国际标准时间23点0分，北京时间需要+8小时，代表北京时间上午7点运行
     - cron: '0 23 * * *'
-jobs:
-#将工作流程中运行的所有作业组合在一起
-  build:
-    runs-on: ubuntu-latest 
+    jobs:
+  work:
+    runs-on: ubuntu-latest
     steps:
-           - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: szenius/set-timezone@v1.0 # 设置执行环境的时区
         with:
           timezoneLinux: "Asia/Shanghai"
@@ -20,7 +19,7 @@ jobs:
 
       - run: poetry install --without dev # 安装
       - run: poetry run python .\bin.py # 执行
-
+      
           cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
       - name: install pip packages
         run: |
