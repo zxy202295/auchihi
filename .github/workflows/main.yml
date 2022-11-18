@@ -10,14 +10,18 @@ jobs:
   #定义名为 build 的作业。 子键将定义作业的属性 
     runs-on: ubuntu-latest 
     steps:
-      - uses: actions/checkout@v2
-    
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+           - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0 # 设置执行环境的时区
         with:
-          python-version: 3.9.1
-      - name: Set timezone
-        run: |
+          timezoneLinux: "Asia/Shanghai"
+      - uses: actions/setup-python@v4 # 使用python装配器
+        with:
+          python-version: '3.10' # 指定python版本
+          cache: 'poetry' # 设置缓存
+
+      - run: poetry install --without dev # 安装
+      - run: poetry run python .\bin.py # 执行
+
           cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
       - name: install pip packages
         run: |
